@@ -6,4 +6,9 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\VL.CCLibs\VL.CCLibs.csproj" />
+    <ProjectReference Include="..\..\VL.UcLibs\VL.UcLibs.csproj" />
+  </ItemGroup>
+
 </Project>
