@@ -16,39 +16,13 @@ using System.Windows.Shapes;
 namespace VL.UcLibs
 {
     /// <summary>
-    /// CtrCellUc.xaml 的交互逻辑
+    /// CellUc.xaml 的交互逻辑
     /// </summary>
-    public partial class CtrCellUc : UserControl
+    public partial class CellUc : UserControl
     {
-        public CtrCellUc()
+        public CellUc()
         {
             InitializeComponent();
         }
-
-
-
-
-        private int _num;
-        public int Num
-        {
-            get { return _num; }
-            set { _num = value; }
-        }
-
-
-
-        string _title;
-        public string Title
-        {
-            get { return _title; }
-            set
-            {
-                _title = value;
-                _btn.Content = _title;
-            }
-        }
-
-
-
     }
 }

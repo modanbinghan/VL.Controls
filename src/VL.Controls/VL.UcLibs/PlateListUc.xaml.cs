@@ -22,8 +22,9 @@ namespace VL.UcLibs
     /// </summary>
     public partial class PlateListUc : UserControl
     {
-        const int _cellWidth = 75;
+        const int _cellWidth = 60;
         const int _cellHeight = 30;
+        const int _margin = 1;
 
         char[] _rowCtrTitles = new char[] 
         { 
@@ -34,15 +35,22 @@ namespace VL.UcLibs
         {
             InitializeComponent();
 
-            _rowCtrItemsControl.ItemsSource = _rowCtrCells;
-            _columnCtrItemsControl.ItemsSource = _columnCtrCells;
+            _columnCtrUniformGrid.Columns = Columns;
+            _columnCtrCells = _columnCtrUniformGrid.Children;
+
+            _rowCtrUniformGrid.Rows = Rows;
+            _rowCtrCells = _rowCtrUniformGrid.Children;
+
+            _dataUniformGrid.Columns = Columns;
+            _dataUniformGrid.Rows = Rows;
+            _dataCells = _dataUniformGrid.Children;
+
             
             _calculateHeight();
             _calculateWidth();
             _resetRowCtrCells();
             _resetColumnCtrCells();
             _slider.ValueChanged += _slider_ValueChanged;
-
         }
 
         private void _plateListUc_Loaded(object sender, RoutedEventArgs e)
@@ -52,11 +60,7 @@ namespace VL.UcLibs
 
         #region Row&Column Control
 
-        ObservableCollection<PlateCtrCell> _rowCtrCells = new ObservableCollection<PlateCtrCell>();
-        public ObservableCollection<PlateCtrCell> RowCtrCells
-        {
-            get { return _rowCtrCells; }
-        }
+        UIElementCollection _rowCtrCells;
 
         void _resetRowCtrCells()
         {
@@ -65,8 +69,7 @@ namespace VL.UcLibs
             {
                 while (_rowCtrCells.Count > rows)
                 {
-                    PlateCtrCell rowCtrCell= _rowCtrCells[rows];
-                    rowCtrCell.Placing -= _rowCtrCell_Placing;
+                    CtrCellUc rowCtrCell =(CtrCellUc)_rowCtrCells[rows];
                     _rowCtrCells.Remove(rowCtrCell);
                 }
             }
@@ -75,8 +78,8 @@ namespace VL.UcLibs
                 int i = _rowCtrCells.Count;
                 while (i < rows)
                 {
-                    PlateCtrCell rowCtrCell = new PlateCtrCell(_rowCtrTitles[i].ToString(), i + 1);
-                    rowCtrCell.Placing += _rowCtrCell_Placing;
+                    CtrCellUc rowCtrCell = new CtrCellUc() { Title = _rowCtrTitles[i].ToString(), Num = i + 1 };
+                    _rowCtrCells.Add(rowCtrCell);
                     i++;
                 }
             }
@@ -88,22 +91,16 @@ namespace VL.UcLibs
             
         }
 
-        ObservableCollection<PlateCtrCell> _columnCtrCells = new ObservableCollection<PlateCtrCell>();
-        public ObservableCollection<PlateCtrCell> ColumnCtrCells
-        {
-            get { return _columnCtrCells; }
-        }
+        UIElementCollection _columnCtrCells;
 
         void _resetColumnCtrCells()
         {
-
             int columns = Columns;
             if (_columnCtrCells.Count > columns)
             {
                 while (_columnCtrCells.Count > columns)
                 {
-                    PlateCtrCell columnCtrCell = _columnCtrCells[columns];
-                    columnCtrCell.Placing -= _columnCtrCell_Placing;
+                    CtrCellUc columnCtrCell = (CtrCellUc)_columnCtrCells[columns];
                     _columnCtrCells.Remove(columnCtrCell);
                 }
             }
@@ -113,8 +110,8 @@ namespace VL.UcLibs
                 while (i < columns)
                 {
                     int num = i + 1;
-                    PlateCtrCell columnCtrCell = new PlateCtrCell(num.ToString(), num);
-                    columnCtrCell.Placing += _columnCtrCell_Placing;
+                    CtrCellUc columnCtrCell = new CtrCellUc() { Title=num.ToString(),Num= num };
+                    _columnCtrCells.Add(columnCtrCell);
                     i++;
                 }
             }
@@ -129,16 +126,24 @@ namespace VL.UcLibs
         #endregion
 
 
+        #region Data
+
+
+        UIElementCollection _dataCells;
+
+        #endregion
+
+
         #region 计算板区域大小
 
         void _calculateWidth()
         {
-            this._zoomGrid.Width = Columns * _cellWidth * this._slider.Value+30;
+            this._zoomGrid.Width = Columns * _cellWidth * this._slider.Value;
         }
 
         void _calculateHeight()
         {
-            this._zoomGrid.Height = Rows * _cellHeight * this._slider.Value+30;
+            this._zoomGrid.Height = Rows * _cellHeight * this._slider.Value;
         }
 
         #endregion

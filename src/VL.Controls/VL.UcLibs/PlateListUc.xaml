@@ -31,34 +31,12 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Button x:Name="allCtrBtn" Style="{StaticResource _ctrBtn}"/>
-                <ItemsControl x:Name="_rowCtrItemsControl" Grid.Row="1" >
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <!--<UniformGrid x:Name="_rowCtrUniformGrid" Columns="1"  Rows="{Binding Rows,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}"/>-->
-                            <StackPanel Orientation="Vertical"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button Content="{Binding Title}" Width="73" Style="{StaticResource _ctrBtn}"  Command="{Binding PlaceCommand}"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-                <ItemsControl x:Name="_columnCtrItemsControl" Grid.Column="1">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid x:Name="_cloumnCtrUniformGrid" Rows="1"  Columns="{Binding Rows,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button Content="{Binding Title}" Command="{Binding PlaceCommand}" Height="28" Style="{StaticResource _ctrBtn}"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-                <ItemsControl Grid.Column="1" Grid.Row="1"  Background="WhiteSmoke">
+                <UniformGrid x:Name="_rowCtrUniformGrid" Grid.Row="1" Columns="1"/>
+                <UniformGrid x:Name="_columnCtrUniformGrid" Grid.Column="1" Rows="1" />
+
+                <UniformGrid x:Name="_dataUniformGrid" Grid.Column="1" Grid.Row="1" Background="WhiteSmoke">
                     
-                </ItemsControl>
+                </UniformGrid>
             </Grid>
         </ScrollViewer>
     </Grid>
