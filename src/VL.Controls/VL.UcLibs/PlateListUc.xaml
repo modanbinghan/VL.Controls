@@ -7,6 +7,59 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Slider x:Name="_slider" Width="200" VerticalAlignment="Center" Value="1" HorizontalAlignment="Right" Minimum="0" Maximum="5" />
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Grid x:Name="_zoomGrid">
+                <Grid.Resources>
+                    <Style x:Key="_ctrBtn" TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="LightGray"/>
+                        <Setter Property="Margin" Value="1"/>
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalAlignment" Value="Stretch"/>
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Button x:Name="allCtrBtn" Style="{StaticResource _ctrBtn}"/>
+                <ItemsControl x:Name="_rowCtrItemsControl" Grid.Row="1" >
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <!--<UniformGrid x:Name="_rowCtrUniformGrid" Columns="1"  Rows="{Binding Rows,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}"/>-->
+                            <StackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding Title}" Width="73" Style="{StaticResource _ctrBtn}"  Command="{Binding PlaceCommand}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <ItemsControl x:Name="_columnCtrItemsControl" Grid.Column="1">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid x:Name="_cloumnCtrUniformGrid" Rows="1"  Columns="{Binding Rows,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding Title}" Command="{Binding PlaceCommand}" Height="28" Style="{StaticResource _ctrBtn}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <ItemsControl Grid.Column="1" Grid.Row="1"  Background="WhiteSmoke">
+                    
+                </ItemsControl>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </UserControl>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,5 +51,45 @@ namespace VL.CCLibs
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(PlateList), new FrameworkPropertyMetadata(typeof(PlateList)));
         }
+
+
+
+        #region 依赖项属性
+
+        public int ColumnNum
+        {
+            get { return (int)GetValue(ColumnNumProperty); }
+            set { SetValue(ColumnNumProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ColumnNum.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ColumnNumProperty =
+            DependencyProperty.Register("ColumnNum", typeof(int), typeof(PlateList), new FrameworkPropertyMetadata(12));
+
+
+
+        public int RowNum
+        {
+            get { return (int)GetValue(RowNumProperty); }
+            set { SetValue(RowNumProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for RowNum.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RowNumProperty =
+            DependencyProperty.Register("RowNum", typeof(int), typeof(PlateList), new FrameworkPropertyMetadata(8));
+
+        #endregion
+
+
+        #region 事件
+
+        public static readonly RoutedEvent ClickEvent = EventManager.RegisterRoutedEvent("Click", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(PlateList));
+        /// <summary>
+        /// Add / Remove ClickEvent handler
+        /// </summary>
+        [Category("Behavior")]
+        public event RoutedEventHandler Click { add { AddHandler(ClickEvent, value); } remove { RemoveHandler(ClickEvent, value); } }
+
+        #endregion
     }
 }

@@ -5,4 +5,8 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="VL.Mvvm.Ass" Version="1.0.0" />
+  </ItemGroup>
+
 </Project>
