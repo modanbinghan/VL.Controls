@@ -3,17 +3,29 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:local="clr-namespace:VL.UcLibs"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <!--<UniformGrid Rows="{Binding Row,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}"
-                 Columns="{Binding Column,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}">-->
+             d:DesignHeight="100" d:DesignWidth="200">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="30"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="24" />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="列：" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="2" Text="行：" VerticalAlignment="Center"/>
+        <xceed:UShortUpDown x:Name="_columnUpDown" Value="{Binding Columns,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}" Grid.Row="1" Height="20" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="X" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <xceed:UShortUpDown x:Name="_rowUpDown" Value="{Binding Rows,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}" Grid.Row="1" Grid.Column="2" Height="20" VerticalAlignment="Center"/>
+        <Border BorderThickness="1" Grid.Row="2" Grid.Column="0" BorderBrush="Gray" Grid.ColumnSpan="3" >
+            <UniformGrid x:Name="_uniformGrid"/>
+        </Border>
+    </Grid>
 
-    <UniformGrid Rows="2"
-                 Columns="2">
-        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="AliceBlue" Margin="2"/>
-        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="AliceBlue" Margin="2"/>
-        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="AliceBlue" Margin="2"/>
-
-    </UniformGrid>
 </UserControl>

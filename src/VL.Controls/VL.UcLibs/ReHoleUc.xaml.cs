@@ -23,32 +23,82 @@ namespace VL.UcLibs
         public ReHoleUc()
         {
             InitializeComponent();
+            this.Loaded += ReHoleUc_Loaded;
         }
 
-
-
-        public int Columns
+        private void ReHoleUc_Loaded(object sender, RoutedEventArgs e)
         {
-            get { return (int)GetValue(ColumnsProperty); }
+            _uniformGrid.Columns = _columnUpDown.Value.Value;
+            _uniformGrid.Rows = _rowUpDown.Value.Value;
+            _reCells();
+            _columnUpDown.ValueChanged += _columnUpDown_ValueChanged;
+            _rowUpDown.ValueChanged += _rowUpDown_ValueChanged;
+        }
+
+        private void _columnUpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            _uniformGrid.Columns = _columnUpDown.Value.Value;
+            _reCells();
+        }
+
+        private void _rowUpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            _uniformGrid.Rows = _rowUpDown.Value.Value;
+            _reCells();
+        }
+
+        void _reCells()
+        {
+            int aimCellsNum = _uniformGrid.Columns * _uniformGrid.Rows;
+            if (aimCellsNum < _uniformGrid.Children.Count)
+            {
+                while (_uniformGrid.Children.Count > aimCellsNum)
+                {
+                    _uniformGrid.Children.RemoveAt(0);
+                }
+            }
+            else if (aimCellsNum > _uniformGrid.Children.Count)
+            {
+                for (int i = _uniformGrid.Children.Count; i < aimCellsNum; i++)
+                {
+                    Rectangle rec = _createRectange();
+                    _uniformGrid.Children.Add(rec);
+                }
+            }
+        }
+
+        Rectangle _createRectange()
+        {
+            return new Rectangle()
+            {
+                Stroke = Brushes.Transparent,
+                Fill = Brushes.DarkBlue,
+                Margin = new Thickness(1d)
+            };
+        }
+
+        public ushort Columns
+        {
+            get { return (ushort)GetValue(ColumnsProperty); }
             set { SetValue(ColumnsProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for Columns.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ColumnsProperty =
-            DependencyProperty.Register("Columns", typeof(int), typeof(ReHoleUc), new PropertyMetadata(2));
+            DependencyProperty.Register("Columns", typeof(ushort), typeof(ReHoleUc), new FrameworkPropertyMetadata((ushort)2));
 
 
 
 
-        public int Rows
+        public ushort Rows
         {
-            get { return (int)GetValue(RowsProperty); }
+            get { return (ushort)GetValue(RowsProperty); }
             set { SetValue(RowsProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for Rows.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty RowsProperty =
-            DependencyProperty.Register("Rows", typeof(int), typeof(ReHoleUc), new PropertyMetadata(1));
+            DependencyProperty.Register("Rows", typeof(ushort), typeof(ReHoleUc), new FrameworkPropertyMetadata((ushort)1));
 
 
 

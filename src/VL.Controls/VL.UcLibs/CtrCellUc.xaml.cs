@@ -20,19 +20,19 @@ namespace VL.UcLibs
     /// </summary>
     public partial class CtrCellUc : UserControl
     {
-        public CtrCellUc()
+        public CtrCellUc(string title,int num)
         {
             InitializeComponent();
+            _num = num;
+            _title = title;
+            _btn.Content = _title;
         }
-
-
 
 
         private int _num;
         public int Num
         {
             get { return _num; }
-            set { _num = value; }
         }
 
 
@@ -41,11 +41,6 @@ namespace VL.UcLibs
         public string Title
         {
             get { return _title; }
-            set
-            {
-                _title = value;
-                _btn.Content = _title;
-            }
         }
 
 

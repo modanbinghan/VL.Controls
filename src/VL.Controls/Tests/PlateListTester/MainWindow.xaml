@@ -7,11 +7,24 @@
         xmlns:local="clr-namespace:PlateListTester"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <vluc:PlateListUc Grid.Row="1"/>
-    </Grid>
+    <TabControl>
+        <TabItem Header="PlateListUc">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <vluc:PlateListUc Grid.Row="1"/>
+            </Grid>
+        </TabItem>
+        <TabItem Header="PlateListUc">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <vluc:ReHoleUc Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Grid>
+        </TabItem>
+    </TabControl>
 </Window>

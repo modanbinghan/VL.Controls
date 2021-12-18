@@ -20,9 +20,30 @@ namespace VL.UcLibs
     /// </summary>
     public partial class CellUc : UserControl
     {
-        public CellUc()
+        public CellUc(int row,int column)
         {
             InitializeComponent();
+            _row = row;
+            _column = column;
+            _key = _row * 10000 + _column;
+        }
+
+        private int _row;
+        public int Row
+        {
+            get { return _row; }
+        }
+
+        private int _column;
+        public int Column
+        {
+            get { return _column; }
+        }
+
+        int _key;
+        public int Key
+        {
+            get { return _key; }
         }
     }
 }

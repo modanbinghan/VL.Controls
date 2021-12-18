@@ -8,16 +8,22 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="25"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Slider x:Name="_slider" Width="200" VerticalAlignment="Center" Value="1" HorizontalAlignment="Right" Minimum="0" Maximum="5" />
-        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <Slider x:Name="_slider" Width="150" Value="1" HorizontalAlignment="Right" Minimum="0" Maximum="5" />
+            <Button Width="18" Height="18" BorderBrush="Transparent" Background="Transparent" x:Name="_resetSizeBtn" VerticalAlignment="Center">
+                <Image Width="16" Source="/VL.UcLibs;component/reset.png"/>
+            </Button>
+        </StackPanel>
+        <ScrollViewer x:Name="_scrollViewer" Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <Grid x:Name="_zoomGrid">
                 <Grid.Resources>
                     <Style x:Key="_ctrBtn" TargetType="{x:Type Button}">
-                        <Setter Property="Background" Value="LightGray"/>
-                        <Setter Property="Margin" Value="1"/>
+                        <Setter Property="Background" Value="White"/>
+                        <Setter Property="BorderBrush" Value="LightGray"/>
+                        <Setter Property="Margin" Value="0,0,1,1"/>
                         <Setter Property="HorizontalAlignment" Value="Stretch"/>
                         <Setter Property="VerticalAlignment" Value="Stretch"/>
                     </Style>
@@ -31,12 +37,11 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Button x:Name="allCtrBtn" Style="{StaticResource _ctrBtn}"/>
-                <UniformGrid x:Name="_rowCtrUniformGrid" Grid.Row="1" Columns="1"/>
-                <UniformGrid x:Name="_columnCtrUniformGrid" Grid.Column="1" Rows="1" />
-
-                <UniformGrid x:Name="_dataUniformGrid" Grid.Column="1" Grid.Row="1" Background="WhiteSmoke">
-                    
-                </UniformGrid>
+                <UniformGrid x:Name="_rowCtrUniformGrid" Grid.Row="1" Columns="1" Margin="0,0,1,1"/>
+                <UniformGrid x:Name="_columnCtrUniformGrid" Grid.Column="1" Rows="1" Margin="0,0,1,1"/>
+                <Border Grid.Column="1" Grid.Row="1" BorderBrush="#969696" BorderThickness="1">
+                    <UniformGrid x:Name="_dataUniformGrid" Background="WhiteSmoke"/>
+                </Border>
             </Grid>
         </ScrollViewer>
     </Grid>
