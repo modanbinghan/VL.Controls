@@ -22,10 +22,6 @@ namespace VL.UcLibs
     /// </summary>
     public partial class PlateListUc : UserControl
     {
-        const int _cellWidth = 60;
-        const int _cellHeight = 30;
-        const int _margin = 1;
-
         char[] _rowCtrTitles = new char[] 
         { 
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W' , 'X', 'Y', 'Z'
@@ -53,6 +49,8 @@ namespace VL.UcLibs
         {
             _columnCtrCells = _columnCtrUniformGrid.Children;
             _rowCtrCells = _rowCtrUniformGrid.Children;
+            _gridRowDefs = _dataUniformGrid.RowDefinitions;
+            _gridColumnDefs = _dataUniformGrid.ColumnDefinitions;
             _cells = _dataUniformGrid.Children;
             _onMeshChanged();
         }
@@ -134,7 +132,11 @@ namespace VL.UcLibs
                 _currentBoxSelectedBorder.Opacity = 0.4;
                 _currentBoxSelectedBorder.BorderThickness = new Thickness(1);
                 _currentBoxSelectedBorder.BorderBrush = new SolidColorBrush(Colors.OrangeRed);
-                this._dataGrid.Children.Add(_currentBoxSelectedBorder);
+                Grid.SetColumn(_currentBoxSelectedBorder, 0);
+                Grid.SetRow(_currentBoxSelectedBorder, 0);
+                Grid.SetColumnSpan(_currentBoxSelectedBorder, _dataUniformGrid.ColumnDefinitions.Count);
+                Grid.SetRowSpan(_currentBoxSelectedBorder, _dataUniformGrid.RowDefinitions.Count);
+                this._dataUniformGrid.Children.Add(_currentBoxSelectedBorder);
             }
             _currentBoxSelectedBorder.Width = Math.Abs(endPoint.X - _startPoint.X);
             _currentBoxSelectedBorder.Height = Math.Abs(endPoint.Y - _startPoint.Y);
@@ -170,12 +172,31 @@ namespace VL.UcLibs
             this._dataUniformGrid.MouseMove -= this.OnMouseMove;
             this._dataUniformGrid.LostMouseCapture -= this.OnLostMouseCapture;
             this._dataUniformGrid.RemoveHandler(UIElement.MouseLeftButtonUpEvent, new MouseButtonEventHandler(this.OnMouseLeftButtonUp));
-            if (_currentBoxSelectedBorder != null&&_dataGrid.Children.Contains(_currentBoxSelectedBorder))
+            if (_currentBoxSelectedBorder != null&& _dataUniformGrid.Children.Contains(_currentBoxSelectedBorder))
             {
-                _dataGrid.Children.Remove(_currentBoxSelectedBorder);
+                _dataUniformGrid.Children.Remove(_currentBoxSelectedBorder);
                 _currentBoxSelectedBorder = null;
             }
         }
+
+        #endregion
+
+
+        #region DargColor
+
+
+
+        public Color DargColor
+        {
+            get { return (Color)GetValue(DargColorProperty); }
+            set { SetValue(DargColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for DargColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DargColorProperty =
+            DependencyProperty.Register("DargColor", typeof(Color), typeof(PlateListUc), new FrameworkPropertyMetadata(Colors.LightBlue));
+
+
 
         #endregion
 
@@ -248,6 +269,48 @@ namespace VL.UcLibs
 
 
         #region Data
+
+        #region Grid RowDefinitionCollection/ColumnDefinitionCollection
+
+        RowDefinitionCollection _gridRowDefs;
+        ColumnDefinitionCollection _gridColumnDefs;
+
+        void _removeRowDefinitions(int newRows)
+        {
+            int i = newRows;
+            while (_gridRowDefs.Count > newRows)
+            {
+                _gridRowDefs.RemoveAt(i);
+            }
+        }
+
+        void _addRowDefinitions(int newRows)
+        {
+            for (int i = _gridRowDefs.Count; i < newRows; i++)
+            {
+                _gridRowDefs.Add(new RowDefinition() { Height = new GridLength(1d, GridUnitType.Star) });
+            }
+        }
+
+        void _removeColumnDefinitions(int newColumns)
+        {
+            int i = newColumns;
+            while (_gridColumnDefs.Count > newColumns)
+            {
+                _gridColumnDefs.RemoveAt(i);
+            }
+        }
+
+        void _addColumnDefinitions(int newColumns)
+        {
+            for (int i = _gridColumnDefs.Count; i < newColumns; i++)
+            {
+                _gridColumnDefs.Add(new ColumnDefinition() { Width = new GridLength(1d, GridUnitType.Star) });
+            }
+        }
+
+        #endregion
+
 
         #region Cell添加、移除
 
@@ -322,6 +385,8 @@ namespace VL.UcLibs
         CellUc _createCellUc(int row,int column)
         {
             CellUc cell = new CellUc(row, column);
+            Grid.SetRow(cell, cell.Row - 1);
+            Grid.SetColumn(cell, cell.Column - 1);
             //cell.AddHandler(UIElement.MouseLeftButtonDownEvent, new MouseButtonEventHandler(this._onCellMouseLeftButtonDown), true);
             //cell.AddHandler(UIElement.MouseMoveEvent, new MouseEventHandler(this._onCellMouseMove), false);
             return cell;
@@ -358,25 +423,6 @@ namespace VL.UcLibs
         #endregion
 
 
-        #region DargColor
-
-
-
-        public Color DargColor
-        {
-            get { return (Color)GetValue(DargColorProperty); }
-            set { SetValue(DargColorProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for DargColor.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty DargColorProperty =
-            DependencyProperty.Register("DargColor", typeof(Color), typeof(PlateListUc), new FrameworkPropertyMetadata(Colors.LightBlue));
-
-
-
-        #endregion
-
-
         #region 依赖项属性
 
         public PlateMesh Mesh
@@ -405,12 +451,12 @@ namespace VL.UcLibs
             if (mesh.Rows != _rowCtrUniformGrid.Rows)
             {
                 _rowCtrUniformGrid.Rows = mesh.Rows;
-                _dataUniformGrid.Rows = mesh.Rows;
+                //_dataUniformGrid.Rows = mesh.Rows;
             }
             if (mesh.Columns != _columnCtrUniformGrid.Columns)
             {
                 _columnCtrUniformGrid.Columns = mesh.Columns;
-                _dataUniformGrid.Columns = mesh.Columns;
+                //_dataUniformGrid.Columns = mesh.Columns;
             }
             if(currentRows > mesh.Rows)
             {
@@ -442,11 +488,13 @@ namespace VL.UcLibs
         {
             _removeCtrCellRows(newRows);
             _removeCellRows(newRows);
+            _removeRowDefinitions(newRows);
         }
 
         void _addRows(int currentColumns,int oldRows, int newRows)
         {
             _addCtrCellRows(newRows);
+            _addRowDefinitions(newRows);
             _addCellRows(currentColumns,oldRows,newRows);
         }
 
@@ -454,11 +502,13 @@ namespace VL.UcLibs
         {
             _removeCtrCellColumns(newColumns);
             _removeCellColumns(newColumns);
+            _removeColumnDefinitions(newColumns);
         }
 
         void _addColumns(int currentRows,int oldColumns, int newColumns)
         {
             _addCtrCellColumns(newColumns);
+            _addColumnDefinitions(newColumns);
             _addCellColumns(currentRows, oldColumns,newColumns);
         }
 
@@ -482,6 +532,53 @@ namespace VL.UcLibs
             this._scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
             this._scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
         }
+
+        #endregion
+
+
+        #region 数据获取、数据模板、模板选择器
+
+
+
+        public CellProvider Provider
+        {
+            get { return (CellProvider)GetValue(ProviderProperty); }
+            set { SetValue(ProviderProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Provider.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register("Provider", typeof(CellProvider), typeof(PlateListUc), new PropertyMetadata(new CellProvider(null)));
+
+
+
+
+        public DataTemplate CellTemplate
+        {
+            get { return (DataTemplate)GetValue(CellTemplateProperty); }
+            set { SetValue(CellTemplateProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for CellTemplate.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CellTemplateProperty =
+            DependencyProperty.Register("CellTemplate", typeof(DataTemplate), typeof(PlateListUc), new PropertyMetadata(null));
+
+
+
+
+
+        public DataTemplateSelector CellTemplateSelector
+        {
+            get { return (DataTemplateSelector)GetValue(CellTemplateSelectorProperty); }
+            set { SetValue(CellTemplateSelectorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for CellTemplateSelector.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CellTemplateSelectorProperty =
+            DependencyProperty.Register("CellTemplateSelector", typeof(DataTemplateSelector), typeof(PlateListUc), new PropertyMetadata(null));
+
+
+
 
         #endregion
     }

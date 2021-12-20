@@ -43,9 +43,8 @@
                 <UniformGrid x:Name="_rowCtrUniformGrid" Grid.Row="1" Columns="1" Margin="0,0,1,1"/>
                 <UniformGrid x:Name="_columnCtrUniformGrid" Grid.Column="1" Rows="1" Margin="0,0,1,1"/>
                 <Border Grid.Column="1" Grid.Row="1" BorderBrush="#969696" BorderThickness="1">
-                    <Grid x:Name="_dataGrid">
-                        <UniformGrid x:Name="_dataUniformGrid" Background="WhiteSmoke" HorizontalAlignment="Stretch"/>
-                    </Grid>
+                    <!--<UniformGrid x:Name="_dataUniformGrid" Background="WhiteSmoke" HorizontalAlignment="Stretch"/>-->
+                    <Grid x:Name="_dataUniformGrid" Background="WhiteSmoke" HorizontalAlignment="Stretch"/>
                 </Border>
             </Grid>
         </ScrollViewer>
