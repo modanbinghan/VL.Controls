@@ -37,6 +37,18 @@ namespace VL.UcLibs
             this.Loaded += _plateListUc_Loaded;
         }
 
+
+        private void _plateListUc_Loaded(object sender, RoutedEventArgs e)
+        {
+            _initialize();
+            _scrollViewer.SizeChanged += _scrollViewer_SizeChanged;
+            _slider.ValueChanged += _slider_ValueChanged;
+            _resetSizeBtn.Click += _resetSizeBtn_Click;
+            _readyDrag();
+        }
+
+        #region 初始化
+
         void _initialize()
         {
             _columnCtrCells = _columnCtrUniformGrid.Children;
@@ -45,12 +57,14 @@ namespace VL.UcLibs
             _onMeshChanged();
         }
 
-        private void _plateListUc_Loaded(object sender, RoutedEventArgs e)
+        #endregion
+
+
+        #region 容器ScorllViewer的尺码改变时，重置Slider缩放条的大小-》重新计算_zoomGrid的大小
+
+        private void _scrollViewer_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            _initialize();
-            _scrollViewer.SizeChanged += _scrollViewer_SizeChanged;
-            _slider.ValueChanged += _slider_ValueChanged;
-            _resetSizeBtn.Click += _resetSizeBtn_Click;
+            _zoomSize();
         }
 
         private void _resetSizeBtn_Click(object sender, RoutedEventArgs e)
@@ -58,10 +72,112 @@ namespace VL.UcLibs
             _slider.Value = 1;
         }
 
-        private void _scrollViewer_SizeChanged(object sender, SizeChangedEventArgs e)
+        #endregion
+
+
+        #region 鼠标拖动选择
+
+        void _readyDrag()
         {
-            _zoomSize();
+            this._dataUniformGrid.AddHandler(UIElement.MouseLeftButtonDownEvent, new MouseButtonEventHandler(this.OnMouseLeftButtonDown), false);
         }
+
+
+        Point _startPoint;
+        //CellUc _startCell;
+        //CellUc _endStartCell;
+        private Border _currentBoxSelectedBorder = null;//拖动展示的提示框
+
+
+
+        private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.StartDrag(e.GetPosition(this._dataUniformGrid));
+
+            //if (this.DragBegun != null)
+            //{
+            //    this.DragBegun(this, e);
+            //}
+        }
+
+        internal void StartDrag(Point positionInElementCoordinates)
+        {
+            this._startPoint = positionInElementCoordinates;
+
+            this._dataUniformGrid.CaptureMouse();
+
+            this._dataUniformGrid.MouseMove += this.OnMouseMove;
+            this._dataUniformGrid.LostMouseCapture += this.OnLostMouseCapture;
+            this._dataUniformGrid.AddHandler(UIElement.MouseLeftButtonUpEvent, new MouseButtonEventHandler(this.OnMouseLeftButtonUp), false /* handledEventsToo */);
+        }
+
+
+        private void OnMouseMove(object sender, MouseEventArgs e)
+        {
+            this.HandleDrag(e.GetPosition(this._dataUniformGrid));
+
+            //if (this.Dragging != null)
+            //{
+            //    this.Dragging(this, e);
+            //}
+        }
+
+        internal void HandleDrag(Point newPositionInElementCoordinates)
+        {
+            Point endPoint = newPositionInElementCoordinates;
+            if (_currentBoxSelectedBorder == null)
+            {
+                _currentBoxSelectedBorder = new Border();
+                _currentBoxSelectedBorder.Background = new SolidColorBrush(Colors.Orange);
+                _currentBoxSelectedBorder.HorizontalAlignment = HorizontalAlignment.Left;
+                _currentBoxSelectedBorder.VerticalAlignment = VerticalAlignment.Top;
+                _currentBoxSelectedBorder.Opacity = 0.4;
+                _currentBoxSelectedBorder.BorderThickness = new Thickness(1);
+                _currentBoxSelectedBorder.BorderBrush = new SolidColorBrush(Colors.OrangeRed);
+                this._dataGrid.Children.Add(_currentBoxSelectedBorder);
+            }
+            _currentBoxSelectedBorder.Width = Math.Abs(endPoint.X - _startPoint.X);
+            _currentBoxSelectedBorder.Height = Math.Abs(endPoint.Y - _startPoint.Y);
+            Thickness margin = new Thickness();
+            if (endPoint.X - _startPoint.X >= 0)
+                margin.Left = _startPoint.X;
+            else
+                margin.Left = endPoint.X;
+            if (endPoint.Y - _startPoint.Y >= 0)
+                margin.Top = _startPoint.Y;
+            else
+                margin.Top = endPoint.Y;
+            _currentBoxSelectedBorder.Margin = margin;
+        }
+
+        private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            this._dataUniformGrid.ReleaseMouseCapture();
+        }
+
+        private void OnLostMouseCapture(object sender, MouseEventArgs e)
+        {
+            this.EndDrag();
+
+            //if (this.DragFinished != null)
+            //{
+            //    this.DragFinished(this, e);
+            //}
+        }
+
+        internal void EndDrag()
+        {
+            this._dataUniformGrid.MouseMove -= this.OnMouseMove;
+            this._dataUniformGrid.LostMouseCapture -= this.OnLostMouseCapture;
+            this._dataUniformGrid.RemoveHandler(UIElement.MouseLeftButtonUpEvent, new MouseButtonEventHandler(this.OnMouseLeftButtonUp));
+            if (_currentBoxSelectedBorder != null&&_dataGrid.Children.Contains(_currentBoxSelectedBorder))
+            {
+                _dataGrid.Children.Remove(_currentBoxSelectedBorder);
+                _currentBoxSelectedBorder = null;
+            }
+        }
+
+        #endregion
 
 
         #region Row Control
@@ -133,6 +249,8 @@ namespace VL.UcLibs
 
         #region Data
 
+        #region Cell添加、移除
+
         UIElementCollection _cells;
 
         void _removeCellRows(int newRows)
@@ -196,17 +314,65 @@ namespace VL.UcLibs
             }
         }
 
+        #endregion
+
+
+        #region 单元格创建、释放
 
         CellUc _createCellUc(int row,int column)
         {
             CellUc cell = new CellUc(row, column);
+            //cell.AddHandler(UIElement.MouseLeftButtonDownEvent, new MouseButtonEventHandler(this._onCellMouseLeftButtonDown), true);
+            //cell.AddHandler(UIElement.MouseMoveEvent, new MouseEventHandler(this._onCellMouseMove), false);
             return cell;
         }
 
         void _disposeCellUc(CellUc cell)
         {
-
+            //    cell.RemoveHandler(UIElement.MouseLeftButtonDownEvent, new MouseButtonEventHandler(this._onCellMouseLeftButtonDown));
+            //    cell.RemoveHandler(UIElement.MouseMoveEvent, new MouseEventHandler(this._onCellMouseMove));
         }
+
+
+        //private void _onCellMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        //{
+        //    if (_startCell == null)
+        //    {
+        //        _startCell = (CellUc)sender;
+        //        _startCell.Background = new SolidColorBrush(DargColor);
+        //    }
+        //}
+
+        //private void _onCellMouseMove(object sender, MouseEventArgs e)
+        //{
+        //    if (_startCell != null)
+        //    {
+        //        _endStartCell = (CellUc)sender;
+        //        _endStartCell.Background = new SolidColorBrush(DargColor);
+        //    }
+        //}
+
+        #endregion
+
+
+        #endregion
+
+
+        #region DargColor
+
+
+
+        public Color DargColor
+        {
+            get { return (Color)GetValue(DargColorProperty); }
+            set { SetValue(DargColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for DargColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DargColorProperty =
+            DependencyProperty.Register("DargColor", typeof(Color), typeof(PlateListUc), new FrameworkPropertyMetadata(Colors.LightBlue));
+
+
 
         #endregion
 

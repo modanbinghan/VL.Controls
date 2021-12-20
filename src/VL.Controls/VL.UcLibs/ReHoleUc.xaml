@@ -7,6 +7,16 @@
              xmlns:local="clr-namespace:VL.UcLibs"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="200">
+    
+    <UserControl.Style>
+        <Style TargetType="UserControl">
+            <Style.Triggers>
+                <Trigger Property="Control.IsEnabled" Value="False">
+                    <Setter Property="Control.OpacityMask" Value="#66FFFFFF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Style>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -20,11 +30,23 @@
         </Grid.RowDefinitions>
         <TextBlock Text="列：" VerticalAlignment="Center"/>
         <TextBlock Grid.Column="2" Text="行：" VerticalAlignment="Center"/>
-        <xceed:UShortUpDown x:Name="_columnUpDown" Value="{Binding Columns,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}" Grid.Row="1" Height="20" VerticalAlignment="Center"/>
+        <xceed:IntegerUpDown x:Name="_columnUpDown" Minimum="1" Value="{Binding Columns,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:ReHoleUc}}" Grid.Row="1" Height="20" VerticalAlignment="Center"/>
         <TextBlock Grid.Row="1" Grid.Column="1" Text="X" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <xceed:UShortUpDown x:Name="_rowUpDown" Value="{Binding Rows,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}" Grid.Row="1" Grid.Column="2" Height="20" VerticalAlignment="Center"/>
+        <xceed:IntegerUpDown x:Name="_rowUpDown" Minimum="1" Value="{Binding Rows,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:ReHoleUc}}" Grid.Row="1" Grid.Column="2" Height="20" VerticalAlignment="Center"/>
         <Border BorderThickness="1" Grid.Row="2" Grid.Column="0" BorderBrush="Gray" Grid.ColumnSpan="3" >
-            <UniformGrid x:Name="_uniformGrid"/>
+            <ItemsControl ItemsSource="{Binding Cells,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:ReHoleUc}}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle Stroke="Transparent" Fill="{Binding CellBrush,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:ReHoleUc}}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="{Binding Rows,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:ReHoleUc}}" 
+                                     Columns="{Binding Columns,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:ReHoleUc}}"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
         </Border>
     </Grid>
 

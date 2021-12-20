@@ -18,7 +18,10 @@
             </Button>
         </StackPanel>
         <ScrollViewer x:Name="_scrollViewer" Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <Grid x:Name="_zoomGrid">
+            <Grid x:Name="_zoomGrid" Cursor="Hand">
+                <!--<Grid.Cursor>
+                    <Cursor />
+                </Grid.Cursor>-->
                 <Grid.Resources>
                     <Style x:Key="_ctrBtn" TargetType="{x:Type Button}">
                         <Setter Property="Background" Value="White"/>
@@ -40,7 +43,9 @@
                 <UniformGrid x:Name="_rowCtrUniformGrid" Grid.Row="1" Columns="1" Margin="0,0,1,1"/>
                 <UniformGrid x:Name="_columnCtrUniformGrid" Grid.Column="1" Rows="1" Margin="0,0,1,1"/>
                 <Border Grid.Column="1" Grid.Row="1" BorderBrush="#969696" BorderThickness="1">
-                    <UniformGrid x:Name="_dataUniformGrid" Background="WhiteSmoke"/>
+                    <Grid x:Name="_dataGrid">
+                        <UniformGrid x:Name="_dataUniformGrid" Background="WhiteSmoke" HorizontalAlignment="Stretch"/>
+                    </Grid>
                 </Border>
             </Grid>
         </ScrollViewer>

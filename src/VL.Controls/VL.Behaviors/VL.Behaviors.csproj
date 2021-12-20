@@ -1,18 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\VL.CCLibs\VL.CCLibs.csproj" />
-    <ProjectReference Include="..\..\VL.UcLibs\VL.UcLibs.csproj" />
   </ItemGroup>
 
 </Project>
