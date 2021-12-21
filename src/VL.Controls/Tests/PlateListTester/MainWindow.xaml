@@ -17,11 +17,6 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <vluc:PlateListUc Grid.Row="1">
-                    <vluc:PlateListUc.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding }"/>
-                        </DataTemplate>
-                    </vluc:PlateListUc.CellTemplate>
                 </vluc:PlateListUc>
             </Grid>
         </TabItem>

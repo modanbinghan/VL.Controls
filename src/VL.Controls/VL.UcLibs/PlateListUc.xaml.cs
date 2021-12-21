@@ -75,22 +75,55 @@ namespace VL.UcLibs
 
         #region 鼠标拖动选择
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="positionInGirdCoordinates"></param>
+        /// <returns></returns>
+        Tuple<int, int> _getPositionInGrid(Point positionInGirdCoordinates)
+        {
+            double rowHeight = _dataUniformGrid.RowDefinitions[0].ActualHeight;
+            double columnWidth = _dataUniformGrid.ColumnDefinitions[0].ActualWidth;
+            int gridRow = (int)Math.Floor(positionInGirdCoordinates.Y / rowHeight);
+            int gridColumn = (int)Math.Floor(positionInGirdCoordinates.X / columnWidth);
+            if (gridRow < 0)
+            {
+                gridRow = 0;
+            }
+            if (gridRow > _dataUniformGrid.RowDefinitions.Count - 1)
+            {
+                gridRow = _dataUniformGrid.RowDefinitions.Count - 1;
+            }
+            if (gridColumn < 0)
+            {
+                gridColumn = 0;
+            }
+            if (gridColumn > _dataUniformGrid.ColumnDefinitions.Count - 1)
+            {
+                gridColumn = _dataUniformGrid.ColumnDefinitions.Count - 1;
+            }
+
+            return new Tuple<int, int>(gridRow, gridColumn);
+        }
+
         void _readyDrag()
         {
             this._dataUniformGrid.AddHandler(UIElement.MouseLeftButtonDownEvent, new MouseButtonEventHandler(this.OnMouseLeftButtonDown), false);
         }
 
 
-        Point _startPoint;
-        //CellUc _startCell;
-        //CellUc _endStartCell;
+        Tuple<int, int> _startGridPosition;
+
+        Tuple<int, int> _endGridPosition;
         private Border _currentBoxSelectedBorder = null;//拖动展示的提示框
 
 
 
         private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            this.StartDrag(e.GetPosition(this._dataUniformGrid));
+            var positionInGirdCoordinates = e.GetPosition(this._dataUniformGrid);
+            Tuple<int, int> startGridPosition = _getPositionInGrid(positionInGirdCoordinates);
+            this.StartDrag(startGridPosition);
 
             //if (this.DragBegun != null)
             //{
@@ -98,12 +131,12 @@ namespace VL.UcLibs
             //}
         }
 
-        internal void StartDrag(Point positionInElementCoordinates)
+        internal void StartDrag(Tuple<int, int> startGridPosition)
         {
-            this._startPoint = positionInElementCoordinates;
+            this._startGridPosition = startGridPosition;
 
+            this._endGridPosition = startGridPosition;
             this._dataUniformGrid.CaptureMouse();
-
             this._dataUniformGrid.MouseMove += this.OnMouseMove;
             this._dataUniformGrid.LostMouseCapture += this.OnLostMouseCapture;
             this._dataUniformGrid.AddHandler(UIElement.MouseLeftButtonUpEvent, new MouseButtonEventHandler(this.OnMouseLeftButtonUp), false /* handledEventsToo */);
@@ -112,7 +145,9 @@ namespace VL.UcLibs
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
-            this.HandleDrag(e.GetPosition(this._dataUniformGrid));
+            var positionInGirdCoordinates = e.GetPosition(this._dataUniformGrid);
+            Tuple<int, int> endGridPosition = _getPositionInGrid(positionInGirdCoordinates);
+            this.HandleDrag(endGridPosition);
 
             //if (this.Dragging != null)
             //{
@@ -120,36 +155,126 @@ namespace VL.UcLibs
             //}
         }
 
-        internal void HandleDrag(Point newPositionInElementCoordinates)
+        
+
+        internal void HandleDrag(Tuple<int, int> endGridPosition)
         {
-            Point endPoint = newPositionInElementCoordinates;
+            this._endGridPosition = endGridPosition;
             if (_currentBoxSelectedBorder == null)
             {
                 _currentBoxSelectedBorder = new Border();
-                _currentBoxSelectedBorder.Background = new SolidColorBrush(Colors.Orange);
-                _currentBoxSelectedBorder.HorizontalAlignment = HorizontalAlignment.Left;
-                _currentBoxSelectedBorder.VerticalAlignment = VerticalAlignment.Top;
+                _currentBoxSelectedBorder.Background = new SolidColorBrush(DragColor);
+                _currentBoxSelectedBorder.HorizontalAlignment = HorizontalAlignment.Stretch;
+                _currentBoxSelectedBorder.VerticalAlignment = VerticalAlignment.Stretch;
                 _currentBoxSelectedBorder.Opacity = 0.4;
                 _currentBoxSelectedBorder.BorderThickness = new Thickness(1);
-                _currentBoxSelectedBorder.BorderBrush = new SolidColorBrush(Colors.OrangeRed);
-                Grid.SetColumn(_currentBoxSelectedBorder, 0);
-                Grid.SetRow(_currentBoxSelectedBorder, 0);
-                Grid.SetColumnSpan(_currentBoxSelectedBorder, _dataUniformGrid.ColumnDefinitions.Count);
-                Grid.SetRowSpan(_currentBoxSelectedBorder, _dataUniformGrid.RowDefinitions.Count);
+                _currentBoxSelectedBorder.BorderBrush = new SolidColorBrush(Colors.WhiteSmoke);
                 this._dataUniformGrid.Children.Add(_currentBoxSelectedBorder);
             }
-            _currentBoxSelectedBorder.Width = Math.Abs(endPoint.X - _startPoint.X);
-            _currentBoxSelectedBorder.Height = Math.Abs(endPoint.Y - _startPoint.Y);
-            Thickness margin = new Thickness();
-            if (endPoint.X - _startPoint.X >= 0)
-                margin.Left = _startPoint.X;
+
+            //计算结束位置点
+            int gridRow;
+            int gridRowSpan;
+
+            int rowMod = PlaceMesh.Rows;
+            int sumRow = _dataUniformGrid.RowDefinitions.Count;
+            int rowInterval = endGridPosition.Item1 - _startGridPosition.Item1;
+            
+            //计算Row
+            int iniRowSpan =Math.Abs(rowInterval) + 1;  
+            int rowRemainder = iniRowSpan % rowMod;
+            int rowMultiple = iniRowSpan / rowMod;
+            if (rowRemainder != 0)
+            {
+                gridRowSpan = (rowMultiple + 1) * rowMod;
+
+                if (rowInterval >= 0)
+                {
+                    gridRow = _startGridPosition.Item1;
+                    if (gridRow + gridRowSpan > sumRow)
+                    {
+                        gridRowSpan = gridRowSpan - rowMod;
+                    }
+                }
+                else
+                {
+                    if (gridRowSpan - 1 > _startGridPosition.Item1)
+                    {
+                        gridRowSpan = gridRowSpan - rowMod;
+                    }
+                    gridRow = _startGridPosition.Item1 + 1 - gridRowSpan;
+                }
+            }
             else
-                margin.Left = endPoint.X;
-            if (endPoint.Y - _startPoint.Y >= 0)
-                margin.Top = _startPoint.Y;
+            {
+                gridRowSpan = rowMultiple * rowMod;
+                if (rowInterval >= 0)
+                {
+                    gridRow = _startGridPosition.Item1;
+                }
+                else
+                {
+                    gridRow = _startGridPosition.Item1 + 1 - gridRowSpan;
+                }
+            }
+
+            //计算列
+            int gridColumn;
+            int gridColumnSpan;
+
+            int columnMod = PlaceMesh.IsWithBlank ? PlaceMesh.Columns + 1 : PlaceMesh.Columns;
+            int sumColumn = _dataUniformGrid.ColumnDefinitions.Count;
+            int columnInterval = endGridPosition.Item2 - _startGridPosition.Item2;
+            
+            //计算Column
+            int iniColumnSpan =Math.Abs(columnInterval) + 1;  
+            int columnRemainder = iniColumnSpan % columnMod;
+            int columnMultiple = iniColumnSpan / columnMod;
+            if (columnRemainder != 0)
+            {
+                gridColumnSpan = (columnMultiple + 1) * columnMod;
+
+                if (columnInterval >= 0)
+                {
+                    gridColumn = _startGridPosition.Item2;
+                    if (gridColumn + gridColumnSpan > sumColumn)
+                    {
+                        gridColumnSpan = gridColumnSpan - columnMod;
+                    }
+                }
+                else
+                {
+                    if (gridColumnSpan - 1 > _startGridPosition.Item2)
+                    {
+                        gridColumnSpan = gridColumnSpan - columnMod;
+                    }
+                    gridColumn = _startGridPosition.Item2 + 1 - gridColumnSpan;
+                }
+            }
             else
-                margin.Top = endPoint.Y;
-            _currentBoxSelectedBorder.Margin = margin;
+            {
+                gridColumnSpan = columnMultiple * columnMod;
+                if (columnInterval >= 0)
+                {
+                    gridColumn = _startGridPosition.Item2;
+                }
+                else
+                {
+                    gridColumn = _startGridPosition.Item2 + 1 - gridColumnSpan;
+                }
+            }
+            if (gridRowSpan == 0 || gridColumnSpan == 0)
+            {
+                _currentBoxSelectedBorder.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                _currentBoxSelectedBorder.Visibility = Visibility.Visible;
+                Grid.SetRow(_currentBoxSelectedBorder, gridRow);
+                Grid.SetRowSpan(_currentBoxSelectedBorder, gridRowSpan);
+                Grid.SetColumn(_currentBoxSelectedBorder, gridColumn);
+                Grid.SetColumnSpan(_currentBoxSelectedBorder, gridColumnSpan);
+            }
         }
 
         private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -182,19 +307,31 @@ namespace VL.UcLibs
         #endregion
 
 
-        #region DargColor
+        #region 拖动相关依赖项属性：PlaceMesh、DragColor
 
 
 
-        public Color DargColor
+        public Color DragColor
         {
-            get { return (Color)GetValue(DargColorProperty); }
-            set { SetValue(DargColorProperty, value); }
+            get { return (Color)GetValue(DragColorProperty); }
+            set { SetValue(DragColorProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for DargColor.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty DargColorProperty =
-            DependencyProperty.Register("DargColor", typeof(Color), typeof(PlateListUc), new FrameworkPropertyMetadata(Colors.LightBlue));
+        public static readonly DependencyProperty DragColorProperty =
+            DependencyProperty.Register("DragColor", typeof(Color), typeof(PlateListUc), new FrameworkPropertyMetadata(Colors.LightBlue));
+
+
+
+        public PlaceMesh PlaceMesh
+        {
+            get { return (PlaceMesh)GetValue(PlaceMeshProperty); }
+            set { SetValue(PlaceMeshProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PlaceMesh.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PlaceMeshProperty =
+            DependencyProperty.Register("PlaceMesh", typeof(PlaceMesh), typeof(PlateListUc), new PropertyMetadata(new PlaceMesh() { Columns = 2, Rows = 3, IsWithBlank = true }));
 
 
 
@@ -538,19 +675,31 @@ namespace VL.UcLibs
 
         #region 数据获取、数据模板、模板选择器
 
+        //public CellProvider Provider
+        //{
+        //    get { return (CellProvider)GetValue(ProviderProperty); }
+        //    set { SetValue(ProviderProperty, value); }
+        //}
 
+        //// Using a DependencyProperty as the backing store for Provider.  This enables animation, styling, binding, etc...
+        //public static readonly DependencyProperty ProviderProperty =
+        //    DependencyProperty.Register("Provider", typeof(CellProvider), typeof(PlateListUc), new PropertyMetadata(new CellProvider(null)));\
 
-        public CellProvider Provider
+        void _initializeChildren()
         {
-            get { return (CellProvider)GetValue(ProviderProperty); }
-            set { SetValue(ProviderProperty, value); }
+            _children.CollectionChanged += _children_CollectionChanged;
         }
 
-        // Using a DependencyProperty as the backing store for Provider.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ProviderProperty =
-            DependencyProperty.Register("Provider", typeof(CellProvider), typeof(PlateListUc), new PropertyMetadata(new CellProvider(null)));
+        private void _children_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
-
+        ObservableCollection<IPlaceContent> _children = new ObservableCollection<IPlaceContent>();
+        public ObservableCollection<IPlaceContent> Children
+        {
+            get { return _children; }
+        }
 
 
         public DataTemplate CellTemplate
