@@ -35,9 +35,6 @@
         </StackPanel>
         <ScrollViewer x:Name="_scrollViewer" Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <Grid x:Name="_zoomGrid" Cursor="Hand">
-                <!--<Grid.Cursor>
-                    <Cursor />
-                </Grid.Cursor>-->
                 <Grid.Resources>
                     <Style x:Key="_ctrBtn" TargetType="{x:Type Button}">
                         <Setter Property="Background" Value="White"/>
@@ -62,19 +59,6 @@
                     <!--<UniformGrid x:Name="_dataUniformGrid" Background="WhiteSmoke" HorizontalAlignment="Stretch"/>-->
                     <Grid x:Name="_dataUniformGrid" Background="WhiteSmoke" HorizontalAlignment="Stretch"/>
                 </Border>
-                <ItemsControl IsHitTestVisible="False" 
-                              Style="{DynamicResource ItemsControlStyle1}" Grid.Column="1" Grid.Row="1">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Grid />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemContainerStyle>
-                        <Style>
-                            
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
-                </ItemsControl>
             </Grid>
         </ScrollViewer>
     </Grid>

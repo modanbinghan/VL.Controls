@@ -1,0 +1,65 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vluc="clr-namespace:VL.UcLibs;assembly=VL.UcLibs"
+        xmlns:local="clr-namespace:PlateListTester"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors" 
+        x:Class="PlateListTester.MainWindow"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <TabControl>
+        <TabItem Header="PlateListUc">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <vluc:PlateListUc Grid.Row="1">
+                </vluc:PlateListUc>
+            </Grid>
+        </TabItem>
+        <TabItem Header="DragChooseTest" >
+            <Canvas x:Name="mainCanvas" Background="LightGray" MouseMove="MainCanvas_MouseMove" MouseLeftButtonUp="MainCanvas_MouseLeftButtonUp" MouseLeftButtonDown="MainCanvas_MouseLeftButtonDown">
+                <Rectangle Width="25" Height="25" Canvas.Left="100" Canvas.Top="50" Fill="Red"></Rectangle>
+                <Rectangle Width="25" Height="25" Canvas.Left="150" Canvas.Top="50" Fill="Blue"></Rectangle>
+                <Rectangle Width="25" Height="25" Canvas.Left="200" Canvas.Top="50" Fill="Red"></Rectangle>
+                <Rectangle Width="25" Height="25" Canvas.Left="250" Canvas.Top="50" Fill="Blue"></Rectangle>
+                <Rectangle Width="25" Height="25" Canvas.Left="300" Canvas.Top="50" Fill="Red"></Rectangle>
+                <Rectangle Width="25" Height="25" Canvas.Left="350" Canvas.Top="50" Fill="Blue"></Rectangle>
+                <Rectangle Width="25" Height="25" Canvas.Left="100" Canvas.Top="100" Fill="Red"></Rectangle>
+                <Rectangle Width="25" Height="25" Canvas.Left="150" Canvas.Top="100" Fill="Blue"></Rectangle>
+                <Rectangle Width="25" Height="25" Canvas.Left="200" Canvas.Top="100" Fill="Red"></Rectangle>
+                <Rectangle Width="25" Height="25" Canvas.Left="250" Canvas.Top="100" Fill="Blue"></Rectangle>
+                <Rectangle Width="25" Height="25" Canvas.Left="300" Canvas.Top="100" Fill="Red"></Rectangle>
+                <Rectangle Width="25" Height="25" Canvas.Left="350" Canvas.Top="100" Fill="Blue"></Rectangle>
+                <Button x:Name="ReSet" Content="恢复" Width="80" Height="30" Canvas.Right="30" Canvas.Bottom="30" Cursor="Hand" Click="ReSet_Click"></Button>
+            </Canvas>
+        </TabItem>
+        <TabItem Header="PlateListUc">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <vluc:ReHoleUc Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Grid>
+        </TabItem>
+        <TabItem Header="DargBehavior">
+            <Grid>
+                <Rectangle Width="40" Height="40" Fill="DeepPink">
+                    <b:Interaction.Behaviors>
+                        <b:MouseDragElementBehavior/>
+                    </b:Interaction.Behaviors>
+                </Rectangle>
+                
+                <TextBlock Background="BurlyWood" Width="75" Height="20">
+                    <b:Interaction.Behaviors>
+                        <b:MouseDragElementBehavior/>
+                    </b:Interaction.Behaviors>
+                </TextBlock>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</Window>

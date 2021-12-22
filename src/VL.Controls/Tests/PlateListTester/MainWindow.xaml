@@ -1,64 +1,245 @@
-﻿<Window
+﻿<Window x:Class="PlateListTester.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vluc="clr-namespace:VL.UcLibs;assembly=VL.UcLibs"
+        xmlns:cc="clr-namespace:VL.CCLibs;assembly=VL.CCLibs"
         xmlns:local="clr-namespace:PlateListTester"
-        xmlns:b="http://schemas.microsoft.com/xaml/behaviors" 
-        x:Class="PlateListTester.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <Style x:Key="PlateListItemContainerStyle1" TargetType="{x:Type cc:PlateListItem}">
+            <Setter Property="Row" Value="{Binding Row}"/>
+            <Setter Property="Column" Value="{Binding Column}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type cc:PlateListItem}">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
     <TabControl>
-        <TabItem Header="PlateListUc">
+        <TabItem Header="PlateList">
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <vluc:PlateListUc Grid.Row="1">
-                </vluc:PlateListUc>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <cc:PlateList ItemContainerStyle="{DynamicResource PlateListItemContainerStyle1}" Grid.Column="1"
+                    Mesh="{Binding PlateMesh,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                    ItemsSource="{Binding ContentVms}">
+                    <cc:PlateList.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Content}"/>
+                        </DataTemplate>
+                    </cc:PlateList.ItemTemplate>
+                </cc:PlateList>
+
+
             </Grid>
         </TabItem>
-        <TabItem Header="DragChooseTest" >
-            <Canvas x:Name="mainCanvas" Background="LightGray" MouseMove="MainCanvas_MouseMove" MouseLeftButtonUp="MainCanvas_MouseLeftButtonUp" MouseLeftButtonDown="MainCanvas_MouseLeftButtonDown">
-                <Rectangle Width="25" Height="25" Canvas.Left="100" Canvas.Top="50" Fill="Red"></Rectangle>
-                <Rectangle Width="25" Height="25" Canvas.Left="150" Canvas.Top="50" Fill="Blue"></Rectangle>
-                <Rectangle Width="25" Height="25" Canvas.Left="200" Canvas.Top="50" Fill="Red"></Rectangle>
-                <Rectangle Width="25" Height="25" Canvas.Left="250" Canvas.Top="50" Fill="Blue"></Rectangle>
-                <Rectangle Width="25" Height="25" Canvas.Left="300" Canvas.Top="50" Fill="Red"></Rectangle>
-                <Rectangle Width="25" Height="25" Canvas.Left="350" Canvas.Top="50" Fill="Blue"></Rectangle>
-                <Rectangle Width="25" Height="25" Canvas.Left="100" Canvas.Top="100" Fill="Red"></Rectangle>
-                <Rectangle Width="25" Height="25" Canvas.Left="150" Canvas.Top="100" Fill="Blue"></Rectangle>
-                <Rectangle Width="25" Height="25" Canvas.Left="200" Canvas.Top="100" Fill="Red"></Rectangle>
-                <Rectangle Width="25" Height="25" Canvas.Left="250" Canvas.Top="100" Fill="Blue"></Rectangle>
-                <Rectangle Width="25" Height="25" Canvas.Left="300" Canvas.Top="100" Fill="Red"></Rectangle>
-                <Rectangle Width="25" Height="25" Canvas.Left="350" Canvas.Top="100" Fill="Blue"></Rectangle>
-                <Button x:Name="ReSet" Content="恢复" Width="80" Height="30" Canvas.Right="30" Canvas.Bottom="30" Cursor="Hand" Click="ReSet_Click"></Button>
-            </Canvas>
-        </TabItem>
-        <TabItem Header="PlateListUc">
+        <TabItem Header="ItemsControl">
+            <TabItem.Resources>
+                <Style x:Key="ItemsControlStyle1" TargetType="{x:Type ItemsControl}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ItemsControl}">
+                                <Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                                    <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                <DataTemplate x:Key="ItemsControlItemTemplate1">
+                    <Grid/>
+                </DataTemplate>
+                <ItemsPanelTemplate x:Key="ItemsControlItemsPanel1">
+                    <StackPanel/>
+                </ItemsPanelTemplate>
+            </TabItem.Resources>
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <vluc:ReHoleUc Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="177*"/>
+                    <ColumnDefinition Width="223*"/>
+                </Grid.ColumnDefinitions>
+
+                <ItemsControl 
+                    ItemsPanel="{DynamicResource ItemsControlItemsPanel1}" 
+                    ItemTemplate="{DynamicResource ItemsControlItemTemplate1}" 
+                    Style="{DynamicResource ItemsControlStyle1}">
+
+                </ItemsControl>
+
             </Grid>
         </TabItem>
-        <TabItem Header="DargBehavior">
+        <TabItem Header="ListBox">
+            <TabItem.Resources>
+                <DataTemplate x:Key="ListBoxItemTemplate1">
+                    <Grid>
+                        <TextBlock Text="{Binding Content}"/>
+                    </Grid>
+                </DataTemplate>
+                <Style x:Key="FocusVisual">
+                    <Setter Property="Control.Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Rectangle Margin="2" StrokeDashArray="1 2" SnapsToDevicePixels="true" StrokeThickness="1" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                <SolidColorBrush x:Key="Item.MouseOver.Background" Color="#1F26A0DA"/>
+                <SolidColorBrush x:Key="Item.MouseOver.Border" Color="#a826A0Da"/>
+                <SolidColorBrush x:Key="Item.SelectedActive.Background" Color="#3D26A0DA"/>
+                <SolidColorBrush x:Key="Item.SelectedActive.Border" Color="#FF26A0DA"/>
+                <SolidColorBrush x:Key="Item.SelectedInactive.Background" Color="#3DDADADA"/>
+                <SolidColorBrush x:Key="Item.SelectedInactive.Border" Color="#FFDADADA"/>
+                <Style x:Key="ListBoxItemContainerStyle1" TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="SnapsToDevicePixels" Value="True"/>
+                    <Setter Property="Padding" Value="4,1"/>
+                    <Setter Property="Grid.Row" Value="{Binding Row}"/>
+                    <Setter Property="Grid.Column" Value="{Binding Column}"/>
+                    <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+                    <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                <Border
+                            x:Name="Bd" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsMouseOver" Value="True"/>
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="Background" TargetName="Bd" Value="{StaticResource Item.MouseOver.Background}"/>
+                                        <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource Item.MouseOver.Border}"/>
+                                    </MultiTrigger>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                                            <Condition Property="IsSelected" Value="True"/>
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="Background" TargetName="Bd" Value="{StaticResource Item.SelectedInactive.Background}"/>
+                                        <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource Item.SelectedInactive.Border}"/>
+                                    </MultiTrigger>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                                            <Condition Property="IsSelected" Value="True"/>
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="Background" TargetName="Bd" Value="{StaticResource Item.SelectedActive.Background}"/>
+                                        <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource Item.SelectedActive.Border}"/>
+                                    </MultiTrigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                <SolidColorBrush x:Key="ListBox.Static.Background" Color="#FFFFFFFF"/>
+                <SolidColorBrush x:Key="ListBox.Static.Border" Color="#FFABADB3"/>
+                <SolidColorBrush x:Key="ListBox.Disabled.Background" Color="#FFFFFFFF"/>
+                <SolidColorBrush x:Key="ListBox.Disabled.Border" Color="#FFD9D9D9"/>
+                <Style x:Key="ListBoxStyle1" TargetType="{x:Type ListBox}">
+                    <Setter Property="Background" Value="{StaticResource ListBox.Static.Background}"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource ListBox.Static.Border}"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+                    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+                    <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+                    <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
+                    <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListBox}">
+                                <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Padding="1" SnapsToDevicePixels="true">
+                                    <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
+                                        <ItemsPresenter x:Name="_itemsPresenter" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+
+                                        <!--<Grid x:Name="_grid">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                </Grid>-->
+                                    </ScrollViewer>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsEnabled" Value="false">
+                                        <Setter Property="Background" TargetName="Bd" Value="{StaticResource ListBox.Disabled.Background}"/>
+                                        <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource ListBox.Disabled.Border}"/>
+                                    </Trigger>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsGrouping" Value="true"/>
+                                            <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false"/>
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                                    </MultiTrigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                <ItemsPanelTemplate x:Key="ListBoxItemsPanel1">
+                    <Grid  x:Name="_grid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </TabItem.Resources>
             <Grid>
-                <Rectangle Width="40" Height="40" Fill="DeepPink">
-                    <b:Interaction.Behaviors>
-                        <b:MouseDragElementBehavior/>
-                    </b:Interaction.Behaviors>
-                </Rectangle>
-                
-                <TextBlock Background="BurlyWood" Width="75" Height="20">
-                    <b:Interaction.Behaviors>
-                        <b:MouseDragElementBehavior/>
-                    </b:Interaction.Behaviors>
-                </TextBlock>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="177*"/>
+                    <ColumnDefinition Width="223*"/>
+                </Grid.ColumnDefinitions>
+                <ListBox x:Name="_listBox"  Grid.Column="1"
+                         ItemsSource="{Binding ContentVms}" 
+                        Style="{DynamicResource ListBoxStyle1}" 
+                        ItemsPanel="{DynamicResource ListBoxItemsPanel1}" 
+                        ItemContainerStyle="{DynamicResource ListBoxItemContainerStyle1}" 
+                        ItemTemplate="{DynamicResource ListBoxItemTemplate1}">
+
+                </ListBox>
+
             </Grid>
         </TabItem>
     </TabControl>

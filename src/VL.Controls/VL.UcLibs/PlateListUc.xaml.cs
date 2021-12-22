@@ -49,6 +49,7 @@ namespace VL.UcLibs
         {
             _columnCtrCells = _columnCtrUniformGrid.Children;
             _rowCtrCells = _rowCtrUniformGrid.Children;
+
             _gridRowDefs = _dataUniformGrid.RowDefinitions;
             _gridColumnDefs = _dataUniformGrid.ColumnDefinitions;
             _cells = _dataUniformGrid.Children;
@@ -309,8 +310,6 @@ namespace VL.UcLibs
 
         #region 拖动相关依赖项属性：PlaceMesh、DragColor
 
-
-
         public Color DragColor
         {
             get { return (Color)GetValue(DragColorProperty); }
@@ -405,7 +404,7 @@ namespace VL.UcLibs
         #endregion
 
 
-        #region Data
+        #region Area-Cell
 
         #region Grid RowDefinitionCollection/ColumnDefinitionCollection
 

@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="VL.Mvvm.Ass" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\VL.CCLibs\VL.CCLibs.csproj" />
+    <ProjectReference Include="..\..\VL.UcLibs\VL.UcLibs.csproj" />
   </ItemGroup>
 
 </Project>

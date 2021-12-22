@@ -39,8 +39,9 @@ namespace ListBoxStyleTester
             //var stackPanel = (StackPanel)this.ItemsPanel.FindName("PART_StackPanel", presenter);
             _listBox.ApplyTemplate();
 
-            var presenter = (ItemsPresenter)_listBox.Template.FindName("_itemsPresenter", _listBox);
-            var grid = _listBox.ItemsPanel.FindName("_grid", presenter);
+            //var presenter = (ItemsPresenter)_listBox.Template.FindName("_itemsPresenter", _listBox);
+            //var grid = _listBox.ItemsPanel.FindName("_grid", presenter);
+            //var grid = _listBox.Template.FindName("_grid", _listBox);
         }
 
         //void _initialize()

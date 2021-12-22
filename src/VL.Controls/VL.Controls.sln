@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Blend for Visual Studio Version 16
+# Visual Studio Version 16
 VisualStudioVersion = 16.0.31911.196
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{40D086CA-8D5F-43DB-BFD5-0445019E2853}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlateListTester", "Tests\PlateListTester\PlateListTester.csproj", "{124B6A34-42F2-4955-8850-9158C6EA806C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VL.CCLibs", "VL.CCLibs\VL.CCLibs.csproj", "{E8720098-516E-4565-AAD7-53396F17AA4F}"
 EndProject
@@ -13,7 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VL.UcLibs", "VL.UcLibs\VL.U
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VL.Behaviors", "VL.Behaviors\VL.Behaviors.csproj", "{FAD1C617-324C-4982-A480-B8B1B9775D73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListBoxStyleTester", "Tests\ListBoxStyleTester\ListBoxStyleTester.csproj", "{1945DD9A-9E5A-4235-ADA9-97DA07C7C26C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ListBoxStyleTester", "Tests\ListBoxStyleTester\ListBoxStyleTester.csproj", "{1945DD9A-9E5A-4235-ADA9-97DA07C7C26C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlateListUcTester", "Tests\PlateListUcTester\PlateListUcTester.csproj", "{F127E3EF-0803-4A34-93CB-F5A57CB38413}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlateListTester", "Tests\PlateListTester\PlateListTester.csproj", "{E5AFE0AC-3471-4C23-9AB9-232EB6CE141B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +23,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{124B6A34-42F2-4955-8850-9158C6EA806C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{124B6A34-42F2-4955-8850-9158C6EA806C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{124B6A34-42F2-4955-8850-9158C6EA806C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{124B6A34-42F2-4955-8850-9158C6EA806C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E8720098-516E-4565-AAD7-53396F17AA4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E8720098-516E-4565-AAD7-53396F17AA4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8720098-516E-4565-AAD7-53396F17AA4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -41,13 +39,22 @@ Global
 		{1945DD9A-9E5A-4235-ADA9-97DA07C7C26C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1945DD9A-9E5A-4235-ADA9-97DA07C7C26C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1945DD9A-9E5A-4235-ADA9-97DA07C7C26C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F127E3EF-0803-4A34-93CB-F5A57CB38413}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F127E3EF-0803-4A34-93CB-F5A57CB38413}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F127E3EF-0803-4A34-93CB-F5A57CB38413}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F127E3EF-0803-4A34-93CB-F5A57CB38413}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5AFE0AC-3471-4C23-9AB9-232EB6CE141B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5AFE0AC-3471-4C23-9AB9-232EB6CE141B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5AFE0AC-3471-4C23-9AB9-232EB6CE141B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5AFE0AC-3471-4C23-9AB9-232EB6CE141B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{124B6A34-42F2-4955-8850-9158C6EA806C} = {40D086CA-8D5F-43DB-BFD5-0445019E2853}
 		{1945DD9A-9E5A-4235-ADA9-97DA07C7C26C} = {40D086CA-8D5F-43DB-BFD5-0445019E2853}
+		{F127E3EF-0803-4A34-93CB-F5A57CB38413} = {40D086CA-8D5F-43DB-BFD5-0445019E2853}
+		{E5AFE0AC-3471-4C23-9AB9-232EB6CE141B} = {40D086CA-8D5F-43DB-BFD5-0445019E2853}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2EAC577-F876-4FF6-A468-7B2AB2601219}
